@@ -20,12 +20,14 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: "Initialize Gradle Wrapper"
+      - name: "Initialize and Configure Gradle"
         run: |
-          gradle wrapper --gradle-version 8.4
+          # Generate the wrapper for the current Gradle version
+          gradle wrapper
+          # Ensure the wrapper script is executable
           chmod +x gradlew
 
-      - name: "Build Release APK with Gradle"
+      - name: "Build Release APK"
         run: ./gradlew assembleRelease
 
       - name: "Upload Artifact"
