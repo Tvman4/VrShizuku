@@ -20,18 +20,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: "Set up Android SDK"
+        uses: android-actions/setup-android@v3
+
       - name: "Install Gradle 8.4"
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.4'
 
       - name: "Build Release APK"
-        # We add --stacktrace and --info to see exactly why it is failing
-        run: gradle assembleRelease --stacktrace --info
+        run: gradle assembleRelease --stacktrace
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
-        if: success()
         with:
           name: "VRShizuku-Release-APK"
           path: "app/build/outputs/apk/release/app-release.apk"
