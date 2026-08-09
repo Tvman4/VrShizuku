@@ -1,4 +1,4 @@
-name: "Build VRShizuku APK"
+name: "Build VRShizuku Signed Release APK"
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
 
 jobs:
   build-vrshizuku:
-    name: "Compile Android VR Package"
+    name: "Compile Signed Android VR Package"
     runs-on: ubuntu-latest
 
     steps:
@@ -27,18 +27,47 @@ jobs:
         run: |
           yes | sdkmanager --licenses || true
 
+      - name: "Generate Keystore and Configure Signing"
+        run: |
+          keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 \
+          -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" \
+          -storepass password123 -keypass password123
+
+          python3 -c "
+          with open('app/build.gradle', 'r') as f:
+              content = f.read()
+
+          if 'android {' in content:
+              injection = '''    signingConfigs {
+          release {
+              storeFile file('keystore.jks')
+              storePassword 'password123'
+              keyAlias 'keyalias'
+              keyPassword 'password123'
+          }
+      }
+      buildTypes {
+          release {
+              signingConfig signingConfigs.release
+          }
+      }
+      '''
+              content = content.replace('android {', 'android {\n' + injection, 1)
+              with open('app/build.gradle', 'w') as f:
+                  f.write(content)
+          "
+
       - name: "Install Gradle 8.4"
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.4'
-          cache-read-only: true
 
-      - name: "Build Release APK"
-        run: gradle assembleRelease --console=plain || cat app/build/reports/problems/problems-report.html || true
+      - name: "Build Signed Release APK"
+        run: gradle assembleRelease
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
         with:
-          name: "VRShizuku-Release-APK"
+          name: "VRShizuku-Signed-Release-APK"
           path: "app/build/outputs/apk/release/app-release.apk"
           retention-days: 30
