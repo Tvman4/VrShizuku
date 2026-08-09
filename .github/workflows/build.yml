@@ -27,29 +27,16 @@ jobs:
         run: |
           yes | sdkmanager --licenses || true
 
-      - name: "Generate Keystore"
+      - name: "Generate Keystore and Configure Build"
         run: |
           keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" -storepass password123 -keypass password123
+          
+          python3 -c "
+          path = 'app/build.gradle'
+          with open(path, 'r') as f:
+              content = f.read()
 
-      - name: "Write Correct Build File"
-        run: |
-          cat << 'EOF' > app/build.gradle
-          plugins {
-              id 'com.android.application' version '8.1.0'
-          }
-
-          android {
-              namespace 'com.vr.shizuku.manager'
-              compileSdk 34
-
-              defaultConfig {
-                  applicationId "com.vr.shizuku.manager"
-                  minSdk 30
-                  targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
-              }
-
+          signing_block = '''
               signingConfigs {
                   release {
                       storeFile file('keystore.jks')
@@ -58,18 +45,18 @@ jobs:
                       keyPassword 'password123'
                   }
               }
-
               buildTypes {
                   release {
                       signingConfig signingConfigs.release
                   }
               }
-          }
+          '''
 
-          dependencies {
-              implementation 'androidx.appcompat:appcompat:1.6.1'
-          }
-          EOF
+          if 'signingConfigs' not in content:
+              content = content.replace('android {', 'android {' + signing_block, 1)
+              with open(path, 'w') as f:
+                  f.write(content)
+          "
 
       - name: "Install Gradle 8.4"
         uses: gradle/actions/setup-gradle@v3
