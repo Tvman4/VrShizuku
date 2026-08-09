@@ -26,10 +26,12 @@ jobs:
           gradle-version: '8.4'
 
       - name: "Build Release APK"
-        run: gradle assembleRelease
+        # We add --stacktrace and --info to see exactly why it is failing
+        run: gradle assembleRelease --stacktrace --info
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: "VRShizuku-Release-APK"
           path: "app/build/outputs/apk/release/app-release.apk"
