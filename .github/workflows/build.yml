@@ -1,0 +1,37 @@
+name: "Build VRShizuku APK"
+
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+  workflow_dispatch:
+
+jobs:
+  build-vrshizuku:
+    name: "Compile Android VR Package"
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Checkout Code Repository"
+        uses: actions/checkout@v4
+
+      - name: "Set up JDK 17"
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: "Grant Execute Permission for Gradle"
+        run: chmod +x gradlew
+
+      - name: "Build Release APK with Gradle"
+        run: ./gradlew assembleRelease
+
+      - name: "Upload Artifact (Signed/Unsigned APK)"
+        uses: actions/upload-artifact@v4
+        with:
+          name: "VRShizuku-Release-APK"
+          path: "app/build/outputs/apk/release/app-release.apk"
+          retention-days: 30
