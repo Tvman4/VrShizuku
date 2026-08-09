@@ -27,10 +27,49 @@ jobs:
         run: |
           yes | sdkmanager --licenses || true
 
-      - name: "Generate Keystore and Configure Signing"
+      - name: "Generate Keystore"
         run: |
           keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" -storepass password123 -keypass password123
-          python3 -c "path='app/build.gradle'; content=open(path).read(); cfg='\n    signingConfigs {\n        release {\n            storeFile file(\'keystore.jks\')\n            storePassword \'password123\'\n            keyAlias \'keyalias\'\n            keyPassword \'password123\'\n        }\n    }\n    buildTypes {\n        release {\n            signingConfig signingConfigs.release\n        }\n    }\n'; open(path, 'w').write(content.replace('android {', 'android {' + cfg, 1)) if 'android {' in content else None"
+
+      - name: "Write Correct Build File"
+        run: |
+          cat << 'EOF' > app/build.gradle
+          plugins {
+              id 'com.android.application' version '8.1.0'
+          }
+
+          android {
+              namespace 'com.vr.shizuku.manager'
+              compileSdk 34
+
+              defaultConfig {
+                  applicationId "com.vr.shizuku.manager"
+                  minSdk 30
+                  targetSdk 34
+                  versionCode 1
+                  versionName "1.0"
+              }
+
+              signingConfigs {
+                  release {
+                      storeFile file('keystore.jks')
+                      storePassword 'password123'
+                      keyAlias 'keyalias'
+                      keyPassword 'password123'
+                  }
+              }
+
+              buildTypes {
+                  release {
+                      signingConfig signingConfigs.release
+                  }
+              }
+          }
+
+          dependencies {
+              implementation 'androidx.appcompat:appcompat:1.6.1'
+          }
+          EOF
 
       - name: "Install Gradle 8.4"
         uses: gradle/actions/setup-gradle@v3
@@ -38,7 +77,7 @@ jobs:
           gradle-version: '8.4'
 
       - name: "Build Signed Release APK"
-        run: gradle assembleRelease
+        run: gradle assembleRelease --stacktrace
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
