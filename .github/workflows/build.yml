@@ -31,10 +31,10 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           gradle-version: '8.4'
-          cache-read-only: true   # Bypasses write errors to the GitHub cache
+          cache-read-only: true
 
       - name: "Build Release APK"
-        run: gradle assembleRelease --stacktrace --no-daemon
+        run: gradle assembleRelease -i
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
