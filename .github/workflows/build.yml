@@ -20,15 +20,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: "Initialize and Configure Gradle"
+      - name: "Build Release APK Directly"
         run: |
-          # Generate the wrapper for the current Gradle version
-          gradle wrapper
-          # Ensure the wrapper script is executable
-          chmod +x gradlew
-
-      - name: "Build Release APK"
-        run: ./gradlew assembleRelease
+          # Use gradle directly without generating an incompatible wrapper
+          gradle assembleRelease
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
