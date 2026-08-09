@@ -31,6 +31,19 @@ jobs:
         run: |
           keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" -storepass password123 -keypass password123
 
+          mkdir -p app/src/main
+
+          cat << 'EOF' > app/src/main/AndroidManifest.xml
+          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+              package="com.vr.shizuku.manager">
+              <application
+                  android:allowBackup="true"
+                  android:label="VRShizuku"
+                  android:theme="@style/Theme.AppCompat.Light">
+              </application>
+          </manifest>
+          EOF
+
           cat << 'EOF' > settings.gradle
           pluginManagement {
               repositories {
@@ -88,10 +101,11 @@ jobs:
           }
           EOF
 
-      - name: "Install Gradle 8.4"
-        uses: gradle/actions/setup-gradle@v3
-        with:
-          gradle-version: '8.4'
+      - name: "Install Gradle Directly"
+        run: |
+          wget https://services.gradle.org/distributions/gradle-8.4-bin.zip
+          unzip -q gradle-8.4-bin.zip
+          sudo ln -s $(pwd)/gradle-8.4/bin/gradle /usr/bin/gradle
 
       - name: "Build Signed Release APK"
         run: gradle assembleRelease --stacktrace
