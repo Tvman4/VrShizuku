@@ -29,33 +29,8 @@ jobs:
 
       - name: "Generate Keystore and Configure Signing"
         run: |
-          keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 \
-          -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" \
-          -storepass password123 -keypass password123
-
-          python3 -c "
-          with open('app/build.gradle', 'r') as f:
-              content = f.read()
-
-          if 'android {' in content:
-              injection = '''    signingConfigs {
-          release {
-              storeFile file('keystore.jks')
-              storePassword 'password123'
-              keyAlias 'keyalias'
-              keyPassword 'password123'
-          }
-      }
-      buildTypes {
-          release {
-              signingConfig signingConfigs.release
-          }
-      }
-      '''
-              content = content.replace('android {', 'android {\n' + injection, 1)
-              with open('app/build.gradle', 'w') as f:
-                  f.write(content)
-          "
+          keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" -storepass password123 -keypass password123
+          python3 -c "path='app/build.gradle'; content=open(path).read(); cfg='\n    signingConfigs {\n        release {\n            storeFile file(\'keystore.jks\')\n            storePassword \'password123\'\n            keyAlias \'keyalias\'\n            keyPassword \'password123\'\n        }\n    }\n    buildTypes {\n        release {\n            signingConfig signingConfigs.release\n        }\n    }\n'; open(path, 'w').write(content.replace('android {', 'android {' + cfg, 1)) if 'android {' in content else None"
 
       - name: "Install Gradle 8.4"
         uses: gradle/actions/setup-gradle@v3
