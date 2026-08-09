@@ -3,8 +3,6 @@ name: "Build VRShizuku APK"
 on:
   push:
     branches: [ "main", "master" ]
-  pull_request:
-    branches: [ "main", "master" ]
   workflow_dispatch:
 
 jobs:
@@ -21,15 +19,16 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
-          # Removed automatic caching to prevent missing-file errors
 
-      - name: "Grant Execute Permission for Gradle"
-        run: chmod +x gradlew
+      - name: "Initialize Gradle Wrapper"
+        run: |
+          gradle wrapper --gradle-version 8.4
+          chmod +x gradlew
 
       - name: "Build Release APK with Gradle"
         run: ./gradlew assembleRelease
 
-      - name: "Upload Artifact (Signed/Unsigned APK)"
+      - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
         with:
           name: "VRShizuku-Release-APK"
