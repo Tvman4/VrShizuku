@@ -105,7 +105,7 @@ jobs:
         run: |
           wget https://services.gradle.org/distributions/gradle-8.4-bin.zip
           unzip -q gradle-8.4-bin.zip
-          sudo ln -s $(pwd)/gradle-8.4/bin/gradle /usr/bin/gradle
+          echo "$(pwd)/gradle-8.4/bin" >> $GITHUB_PATH
 
       - name: "Build Signed Release APK"
         run: gradle assembleRelease --stacktrace
