@@ -63,10 +63,26 @@ jobs:
           include ':app'
           EOF
 
-          cat << 'EOF' > app/build.gradle
-          plugins {
-              id 'com.android.application' version '8.1.0'
+          cat << 'EOF' > build.gradle
+          buildscript {
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+              dependencies {
+                  classpath 'com.android.tools.build:gradle:8.1.0'
+              }
           }
+          allprojects {
+              repositories {
+                  google()
+                  mavenCentral()
+              }
+          }
+          EOF
+
+          cat << 'EOF' > app/build.gradle
+          apply plugin: 'com.android.application'
 
           android {
               namespace 'com.vr.shizuku.manager'
@@ -108,7 +124,7 @@ jobs:
           echo "$(pwd)/gradle-8.4/bin" >> $GITHUB_PATH
 
       - name: "Build Signed Release APK"
-        run: gradle assembleRelease --info
+        run: gradle assembleRelease --stacktrace
 
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v4
