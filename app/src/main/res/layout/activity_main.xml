@@ -1,42 +1,121 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:padding="24dp"
-    android:background="#121212">
+    android:background="#0F0E17"
+    android:fillViewport="true">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="VRShizuku Manager"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:textColor="#FFFFFF"
-        android:layout_marginBottom="32dp"/>
-
-    <Button
-        android:id="@+id/btnPair"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Pair Wirelessly (Shizuku)"
-        android:padding="14dp"
-        android:layout_marginBottom="16dp"/>
+        android:orientation="vertical"
+        android:padding="20dp">
 
-    <Button
-        android:id="@+id/btnPatchGtag"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Patch Gorilla Tag"
-        android:padding="14dp"/>
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="⚡ VRShizuku Manager"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#FFFFFE"
+            android:layout_marginBottom="16dp"/>
 
-    <TextView
-        android:id="@+id/tvStatus"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Status: Ready"
-        android:textColor="#AAAAAA"
-        android:layout_marginTop="24dp"/>
+        <!-- Pairing Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#2E2F3E"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
 
-</LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Wireless Debugging Pairing"
+                android:textColor="#FF8906"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp"/>
+
+            <EditText
+                android:id="@+id/etPort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter Pairing Port (e.g. 37215)"
+                android:textColor="#FFFFFE"
+                android:textColorHint="#A7A9BE"
+                android:inputType="number"
+                android:backgroundTint="#FF8906"
+                android:layout_marginBottom="8dp"/>
+
+            <EditText
+                android:id="@+id/etCode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter 6-Digit Pairing Code"
+                android:textColor="#FFFFFE"
+                android:textColorHint="#A7A9BE"
+                android:inputType="number"
+                android:backgroundTint="#FF8906"
+                android:layout_marginBottom="12dp"/>
+
+            <Button
+                android:id="@+id/btnPair"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pair Device"
+                android:backgroundTint="#FF8906"
+                android:textColor="#0F0E17"/>
+        </LinearLayout>
+
+        <!-- Patcher Card -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="#2E2F3E"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Universal Game Patcher"
+                android:textColor="#F25F4C"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:layout_marginBottom="10dp"/>
+
+            <Button
+                android:id="@+id/btnPatchGtag"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Patch Gorilla Tag (Direct)"
+                android:backgroundTint="#F25F4C"
+                android:textColor="#FFFFFE"
+                android:layout_marginBottom="8dp"/>
+
+            <Button
+                android:id="@+id/btnPatchAll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Scan &amp; Patch All Installed Games"
+                android:backgroundTint="#E53170"
+                android:textColor="#FFFFFE"/>
+        </LinearLayout>
+
+        <!-- Status Log Box -->
+        <TextView
+            android:id="@+id/tvStatus"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:text="Status: Ready."
+            android:textColor="#A7A9BE"
+            android:background="#16161A"
+            android:padding="12dp"
+            android:scrollbars="vertical"/>
+
+    </LinearLayout>
+</ScrollView>
