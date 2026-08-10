@@ -27,81 +27,9 @@ jobs:
         run: |
           yes | sdkmanager --licenses || true
 
-      - name: "Generate Keystore and Project Files"
+      - name: "Generate Release Keystore"
         run: |
           keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" -storepass password123 -keypass password123
-
-          mkdir -p app/src/main
-
-          cat << 'EOF' > app/src/main/AndroidManifest.xml
-          <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-              package="com.vr.shizuku.manager">
-              <application
-                  android:allowBackup="true"
-                  android:label="VRShizuku"
-                  android:theme="@style/Theme.AppCompat.Light">
-              </application>
-          </manifest>
-          EOF
-
-          cat << 'EOF' > settings.gradle
-          pluginManagement {
-              repositories {
-                  google()
-                  mavenCentral()
-                  gradlePluginPortal()
-              }
-          }
-          dependencyResolutionManagement {
-              repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
-              repositories {
-                  google()
-                  mavenCentral()
-              }
-          }
-          rootProject.name = "VRShizuku"
-          include ':app'
-          EOF
-
-          rm -f build.gradle
-
-          cat << 'EOF' > app/build.gradle
-          plugins {
-              id 'com.android.application' version '8.1.0'
-          }
-
-          android {
-              namespace 'com.vr.shizuku.manager'
-              compileSdk 34
-
-              defaultConfig {
-                  applicationId "com.vr.shizuku.manager"
-                  minSdk 30
-                  targetSdk 34
-                  versionCode 1
-                  versionName "1.0"
-              }
-
-              signingConfigs {
-                  release {
-                      storeFile file('keystore.jks')
-                      storePassword 'password123'
-                      keyAlias 'keyalias'
-                      keyPassword 'password123'
-                  }
-              }
-
-              buildTypes {
-                  release {
-                      signingConfig signingConfigs.release
-                  }
-              }
-          }
-
-          dependencies {
-              implementation 'androidx.appcompat:appcompat:1.6.1'
-          }
-          EOF
 
       - name: "Install Gradle Directly"
         run: |
