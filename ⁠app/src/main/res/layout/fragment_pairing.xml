@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#0F0E17">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Wireless Debugging Pairing"
+        android:textColor="#FF8906"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etPort"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Pairing Port"
+        android:textColor="#FFFFFE"
+        android:textColorHint="#A7A9BE"
+        android:inputType="number"
+        android:layout_marginBottom="12dp"/>
+
+    <EditText
+        android:id="@+id/etCode"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter 6-Digit Pairing Code"
+        android:textColor="#FFFFFE"
+        android:textColorHint="#A7A9BE"
+        android:inputType="number"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnPair"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Connect &amp; Pair"
+        android:backgroundTint="#FF8906"
+        android:textColor="#0F0E17"
+        android:layout_marginBottom="16dp"/>
+
+    <TextView
+        android:id="@+id/tvPairStatus"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Status: Unpaired"
+        android:textColor="#A7A9BE"/>
+</LinearLayout>
