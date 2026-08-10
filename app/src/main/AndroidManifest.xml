@@ -2,11 +2,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.vr.shizuku.manager">
 
+    <!-- Required on Android 11+ to detect installed games like Gorilla Tag -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.LAUNCHER" />
+        </intent>
+        <package android:name="com.AnotherAxiom.GorillaTag" />
+    </queries>
+
     <application
         android:allowBackup="true"
         android:label="VRShizuku"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light">
+        android:theme="@style/Theme.AppCompat.DayNight.NoActionBar">
         <activity
             android:name=".MainActivity"
             android:exported="true">
