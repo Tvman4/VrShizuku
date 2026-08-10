@@ -27,9 +27,13 @@ jobs:
         run: |
           yes | sdkmanager --licenses || true
 
-      - name: "Generate Release Keystore"
+      - name: "Generate Release Keystore and Properties"
         run: |
           keytool -genkey -v -keystore app/keystore.jks -keyalg RSA -keysize 2048 -validity 10000 -alias keyalias -dname "CN=Android, OU=Android, O=Android, L=City, ST=State, C=US" -storepass password123 -keypass password123
+          
+          # Enable AndroidX properties required for dependencies
+          echo "android.useAndroidX=true" >> gradle.properties
+          echo "android.enableJetifier=true" >> gradle.properties
 
       - name: "Install Gradle Directly"
         run: |
